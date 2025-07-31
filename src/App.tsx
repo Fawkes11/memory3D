@@ -1,21 +1,16 @@
-import { Canvas } from '@react-three/fiber'
-import { Suspense } from 'react'
-import { OrbitControls } from '@react-three/drei'
-import { Card } from './components/Card'
+import { useGameStore } from './store/gameStore';
+import { HomeScreen } from './views/HomeScreen';
 
+function App() {
+  const { gameState, startGame } = useGameStore();
 
-export default function App() {
   return (
-    <Canvas camera={{ position: [0, 0, 10], fov: 25 }}>
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[5, 5, 5]} intensity={1} />
-      <OrbitControls />
-      <Suspense fallback={null}>
-        <Card position={[-3, 0, 0]} />
-        <Card position={[0, 0, 0]} />
-        <Card position={[3, 0, 0]} />
-      </Suspense>
-    </Canvas>
-  )
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white overflow-hidden">
+      {gameState === 'home' && <HomeScreen onStartGame={startGame} />}
+      
+      
+    </div>
+  );
 }
 
+export default App;
