@@ -29,7 +29,7 @@ export const Card: React.FC<CardProps> = ({ position = [0, 0, 0] }) => {
         ease: 'bounce.out'
       })
       .to(mesh.rotation, {
-        z: mesh.rotation.z + Math.PI,
+        y: mesh.rotation.y + Math.PI,
         duration: 0.4,
         ease: 'power2.inOut',
         onComplete: () => {
