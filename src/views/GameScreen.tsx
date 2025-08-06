@@ -1,17 +1,17 @@
-import React, { Suspense, useState, useEffect, useCallback, useMemo } from 'react'
+import { Suspense, useState, useEffect, useCallback, useMemo } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { OrbitControls, Html } from '@react-three/drei'
+import { OrbitControls } from '@react-three/drei'
 import { motion } from 'motion/react'
-import { RefreshCw, Timer, Target, Orbit } from 'lucide-react'
+import { RefreshCw, Timer, Target } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { GameCard3D } from '../components/Card'
-import type { CardData } from '../components/Card'
+import { GameCard3D } from '../components/GameCard3D'
+import type { CardData } from '../components/GameCard3D'
 import type { GameStats } from '../store/gameStore'
 
 
-const BOARD_SIZE = 16    // 4x4
+const BOARD_SIZE = 16 
 const GRID = 4
-const SPACING = 3       // separación entre cartas
+const SPACING = 3 
 
 interface GameScreenProps {
   onGameEnd: (stats: GameStats) => void

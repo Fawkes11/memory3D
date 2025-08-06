@@ -1,7 +1,6 @@
 import { useRef, useEffect } from 'react'
-import { Mesh } from 'three'
+import { Mesh, Group } from 'three'
 import { gsap } from 'gsap'
-import { useFrame } from '@react-three/fiber'
 import { Html } from '@react-three/drei'
 
 export interface CardData {
@@ -35,32 +34,27 @@ export const GameCard3D: React.FC<GameCard3DProps> = ({
   disabled,
   position,
 }) => {
-  const meshRef = useRef<Mesh>(null)
+  const groupRef = useRef<Group>(null)
 
-  // Flip animation on state change
   useEffect(() => {
-    const mesh = meshRef.current
-    if (!mesh) return
-
-    gsap.to(mesh.rotation, {
+    if (!groupRef.current) return
+    gsap.to(groupRef.current.rotation, {
       y: card.isFlipped || card.isMatched ? Math.PI : 0,
       duration: 0.6,
       ease: 'power2.inOut',
     })
   }, [card.isFlipped, card.isMatched])
 
-  // Bump effect when clicked
   const handleClick = () => {
     if (disabled || card.isMatched || card.isFlipped) return
-    const mesh = meshRef.current
-    if (!mesh) return
+    if (!groupRef.current) return
 
-    gsap.to(mesh.position, {
+    gsap.to(groupRef.current.position, {
       z: position[2] + 0.5,
       duration: 0.2,
       ease: 'power2.out',
       onComplete: () => {
-        gsap.to(mesh.position, {
+        gsap.to(groupRef.current.position, {
           z: position[2],
           duration: 0.3,
           ease: 'bounce.out',
@@ -71,28 +65,33 @@ export const GameCard3D: React.FC<GameCard3DProps> = ({
   }
 
   return (
-    <group position={position} onClick={handleClick}>
-      {/* Card group container */}
-      <mesh ref={meshRef} castShadow>
+    <group ref={groupRef} position={position} onClick={handleClick}>
+      {/* Parte trasera */}
+      <mesh>
         <boxGeometry args={[2, 3, 0.2]} />
         <meshStandardMaterial
-          attach="material"
           color={card.isMatched ? '#9effa2' : '#2dd4bf'}
           metalness={0.3}
           roughness={0.4}
+          depthTest
         />
       </mesh>
-
-      {/* Front symbol (only shows when flipped) */}
-      {(card.isFlipped || card.isMatched) && (
+      
+      {/* Parte frontal */}
+      <group rotation-y={Math.PI}>
         <mesh position={[0, 0, 0.11]}>
           <planeGeometry args={[1.5, 1.5]} />
-          <meshStandardMaterial color="white" transparent opacity={0.95} />
-          <Html center>
-            <span style={{ fontSize: '1.5rem' }}>{cardSymbols[card.symbol]}</span>
+
+          <meshStandardMaterial color="white" />
+          <Html center transform>
+            <div style={{ textAlign: 'center' }}>
+              <span style={{ fontSize: '1.5rem' }}>
+                {cardSymbols[card.symbol]}
+              </span>
+            </div>
           </Html>
         </mesh>
-      )}
+      </group>
     </group>
   )
 }
