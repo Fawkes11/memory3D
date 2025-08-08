@@ -1,7 +1,6 @@
-import { useRef, useEffect } from 'react'
-import { Mesh, Group } from 'three'
+import { useRef, useEffect, useMemo } from 'react'
+import { Mesh, Group, CanvasTexture, MeshBasicMaterial, PlaneGeometry } from 'three'
 import { gsap } from 'gsap'
-import { Html } from '@react-three/drei'
 
 export interface CardData {
   id: number
@@ -17,17 +16,6 @@ interface GameCard3DProps {
   position: [number, number, number]
 }
 
-const cardSymbols: Record<string, string> = {
-  '⚡': '⚡',
-  '🌟': '🌟',
-  '💎': '💎',
-  '🔥': '🔥',
-  '❄️': '❄️',
-  '🌙': '🌙',
-  '⭐': '⭐',
-  '💫': '💫'
-};
-
 export const GameCard3D: React.FC<GameCard3DProps> = ({
   card,
   onClick,
@@ -35,6 +23,35 @@ export const GameCard3D: React.FC<GameCard3DProps> = ({
   position,
 }) => {
   const groupRef = useRef<Group>(null)
+
+  // Generar la textura de texto dinámicamente
+  const textTexture = useMemo(() => {
+    const canvas = document.createElement('canvas')
+    canvas.width = 256
+    canvas.height = 256
+    const ctx = canvas.getContext('2d')!
+
+    // Fondo transparente
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+    // Fondo opcional (solo para probar)
+    ctx.fillStyle = 'rgba(255,255,255,0.1)'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+    // Símbolo
+    ctx.font = '72px Arial'
+    ctx.fillStyle = 'white'
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.fillText(card.symbol, canvas.width / 2, canvas.height / 2 - 30)
+
+    // Texto extra dinámico
+    ctx.font = '28px Arial'
+    ctx.fillStyle = 'yellow'
+    ctx.fillText(`ID: ${card.id}`, canvas.width / 2, canvas.height / 2 + 50)
+
+    return new CanvasTexture(canvas)
+  }, [card.symbol, card.id])
 
   useEffect(() => {
     if (!groupRef.current) return
@@ -76,20 +93,15 @@ export const GameCard3D: React.FC<GameCard3DProps> = ({
           depthTest
         />
       </mesh>
-      
-      {/* Parte frontal */}
+
+      {/* Parte frontal con textura de canvas */}
       <group rotation-y={Math.PI}>
         <mesh position={[0, 0, 0.11]}>
-          <planeGeometry args={[1.5, 1.5]} />
-
-          <meshStandardMaterial color="white" />
-          <Html center transform>
-            <div style={{ textAlign: 'center' }}>
-              <span style={{ fontSize: '1.5rem' }}>
-                {cardSymbols[card.symbol]}
-              </span>
-            </div>
-          </Html>
+          <planeGeometry args={[1.5, 2]} />
+          <meshBasicMaterial
+            map={textTexture}
+            transparent
+          />
         </mesh>
       </group>
     </group>
