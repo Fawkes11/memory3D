@@ -1,5 +1,5 @@
 import { useRef, useEffect, useMemo } from 'react'
-import { Mesh, Group, CanvasTexture, MeshBasicMaterial, PlaneGeometry } from 'three'
+import {  Group, CanvasTexture  } from 'three'
 import { gsap } from 'gsap'
 
 export interface CardData {
