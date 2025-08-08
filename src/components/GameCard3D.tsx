@@ -71,6 +71,9 @@ export const GameCard3D: React.FC<GameCard3DProps> = ({
       duration: 0.2,
       ease: 'power2.out',
       onComplete: () => {
+
+        if (!groupRef.current) return
+
         gsap.to(groupRef.current.position, {
           z: position[2],
           duration: 0.3,

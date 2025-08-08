@@ -8,7 +8,8 @@ export default defineConfig({
     react(),
     tailwindcss()
   ],
-    resolve: {
+  base: '/memory3D/',
+  resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
