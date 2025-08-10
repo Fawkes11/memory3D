@@ -1,5 +1,4 @@
 import { useRef, useEffect, useMemo } from 'react'
-import type { JSX } from 'react';
 import { Group, CanvasTexture } from 'three'
 import { gsap } from 'gsap'
 import { useGLTF } from '@react-three/drei';
