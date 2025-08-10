@@ -9,9 +9,9 @@ import type { CardData } from '../components/GameCard3D'
 import type { GameStats } from '../store/gameStore'
 
 
-const BOARD_SIZE = 16 
+const BOARD_SIZE = 16
 const GRID = 4
-const SPACING = 3 
+const SPACING = 2.5
 
 interface GameScreenProps {
   onGameEnd: (stats: GameStats) => void
@@ -89,7 +89,7 @@ export function GameScreen({ onGameEnd }: GameScreenProps) {
   const positions = useMemo(() => {
     return cards.map((_, i) => {
       const x = (i % GRID - (GRID - 1) / 2) * SPACING
-      const y = (Math.floor(i / GRID) - (GRID - 1) / 2) * -SPACING
+      const y = (Math.floor(i / GRID) - (GRID - 1) / 2) * -( SPACING + 1.0 )
       return [x, y, 0] as [number, number, number]
     })
   }, [cards])

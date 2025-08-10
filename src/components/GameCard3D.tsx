@@ -1,6 +1,9 @@
 import { useRef, useEffect, useMemo } from 'react'
-import {  Group, CanvasTexture  } from 'three'
+import type { JSX } from 'react';
+import { Group, CanvasTexture } from 'three'
 import { gsap } from 'gsap'
+import { useGLTF } from '@react-three/drei';
+import type { Vector3, Euler } from 'three';
 
 export interface CardData {
   id: number
@@ -62,6 +65,22 @@ export const GameCard3D: React.FC<GameCard3DProps> = ({
     })
   }, [card.isFlipped, card.isMatched])
 
+  function Model({ path, position, rotation }: {
+    path: string;
+    position?: Vector3 | [number, number, number];
+    rotation?: Euler | [number, number, number];
+  }) {
+    const { scene } = useGLTF(path);
+    const clonedScene = useMemo(() => scene.clone(), [scene]);
+    return (
+      <primitive
+        object={clonedScene}
+        position={position}
+        rotation={rotation}
+      />
+    );
+  }
+
   const handleClick = () => {
     if (disabled || card.isMatched || card.isFlipped) return
     if (!groupRef.current) return
@@ -87,7 +106,7 @@ export const GameCard3D: React.FC<GameCard3DProps> = ({
   return (
     <group ref={groupRef} position={position} onClick={handleClick}>
       {/* Parte trasera */}
-      <mesh>
+      {/* <mesh>
         <boxGeometry args={[2, 3, 0.2]} />
         <meshStandardMaterial
           color={card.isMatched ? '#9effa2' : '#2dd4bf'}
@@ -95,7 +114,13 @@ export const GameCard3D: React.FC<GameCard3DProps> = ({
           roughness={0.4}
           depthTest
         />
-      </mesh>
+      </mesh> */}
+
+      <Model
+        path="/CardWithTexture.glb"
+        position={[0, 0, 0]}
+        rotation={[Math.PI / 2, 0, 0]}
+      />
 
       {/* Parte frontal con textura de canvas */}
       <group rotation-y={Math.PI}>
