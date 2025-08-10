@@ -116,7 +116,7 @@ export const GameCard3D: React.FC<GameCard3DProps> = ({
       </mesh> */}
 
       <Model
-        path="/CardWithTexture.glb"
+        path={`${import.meta.env.BASE_URL}CardWithTexture.glb`}
         position={[0, 0, 0]}
         rotation={[Math.PI / 2, 0, 0]}
       />
