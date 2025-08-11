@@ -89,7 +89,7 @@ export function GameScreen({ onGameEnd }: GameScreenProps) {
   const positions = useMemo(() => {
     return cards.map((_, i) => {
       const x = (i % GRID - (GRID - 1) / 2) * SPACING
-      const y = (Math.floor(i / GRID) - (GRID - 1) / 2) * -( SPACING + 1.0 )
+      const y = (Math.floor(i / GRID) - (GRID - 1) / 2) * -(SPACING + 1.0)
       return [x, y, 0] as [number, number, number]
     })
   }, [cards])
@@ -110,18 +110,49 @@ export function GameScreen({ onGameEnd }: GameScreenProps) {
       {/* Escena 3D */}
       <div className="flex-1 w-full  pt-10">
         <Canvas
-          className="w-full h-full "
+          className="w-full h-full"
           shadows
           camera={{ position: [0, 0, 15], fov: 50 }}
         >
-          <ambientLight intensity={0.3} />
+          {/* Luces */}
+          <ambientLight intensity={0.5} />
           <directionalLight
+            position={[5, 3, 10]}
+            intensity={1.5}
             castShadow
-            position={[10, 10, 10]}
-            intensity={0.8}
-            shadow-mapSize-width={1024}
-            shadow-mapSize-height={1024}
+            shadow-mapSize-width={2048}
+            shadow-mapSize-height={2048}
           />
+          <spotLight
+            position={[-6, 5, 10]}
+            angle={0.3}
+            penumbra={0.6}
+            intensity={0.8}
+            color={'#88ccff'}
+          />
+          <pointLight
+            position={[0, -5, 15]}
+            intensity={0.6}
+            color={'#ff66cc'}
+          />
+          <spotLight
+            position={[0, 0, 10]}
+            angle={0.4}
+            penumbra={0.5}
+            intensity={10.2}
+            color={'#ffffff'}
+          />
+
+          {/* Plano para sombras */}
+          <mesh
+            rotation={[0, 0, -Math.PI / 2]} // horizontal
+            position={[0, 0, -1]} // un poco debajo de las cartas
+            receiveShadow
+          >
+            <planeGeometry args={[40, 40]} />
+            <meshStandardMaterial color="#555555" />
+          </mesh>
+
           <Suspense fallback={null}>
             {cards.map((card, i) => (
               <GameCard3D
@@ -133,6 +164,7 @@ export function GameScreen({ onGameEnd }: GameScreenProps) {
               />
             ))}
           </Suspense>
+
           <OrbitControls />
         </Canvas>
       </div>

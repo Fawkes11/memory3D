@@ -123,7 +123,7 @@ export const GameCard3D: React.FC<GameCard3DProps> = ({
 
       {/* Parte frontal con textura de canvas */}
       <group rotation-y={Math.PI}>
-        <mesh position={[0, 0, 0.11]}>
+        <mesh castShadow position={[0, 0, 0.11]}>
           <planeGeometry args={[1.5, 2]} />
           <meshBasicMaterial
             map={textTexture}
